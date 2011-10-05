@@ -1,6 +1,31 @@
 __author__ = 'flipvanrijn'
 
-import SearchEngine
+import urllib
+
+engines = {
+    'google': 'http://www.google.com/#q=%s',
+    'youtube': 'http://www.youtube.com/results?search_query=%s',
+    'wolfram': 'http://www.wolframalpha.com/input/?i=%s',
+    'maps': 'http://maps.google.com/maps?q=%s',
+    'lmgtfy': 'http://www.lmgtfy.com/?q=%s',
+    'imdb': 'http://www.imdb.com/find?q=%s',
+    'flickr': 'http://www.flickr.com/search/q=%s',
+    'urban': 'http://www.urbandictionary.com/define.php?term=%s',
+    'duckduckgo': 'http://www.duckduckgo.com/?q=%s',
+    'wikinl': 'http://nl.wikipedia.org/wiki/Speciaal:Zoeken?search=%s',
+    'wikien': 'http://en.wikipedia.org/wiki/Special:Search?search=%s',
+}
+
+def listEngines():
+    return [k for k in sorted(engines.keys())]
+
+def useEngine(engine, term):
+    return engines.get(engine) % urllib.quote(term, '')
+
+def parse(engine, term):
+    for k, v in engines.items():
+        if engine == k:
+            return v % urllib.quote(term, '')
 
 def command_zoek(bot, reply, args):
     """
@@ -11,18 +36,16 @@ def command_zoek(bot, reply, args):
     if not args:
         return
     args = args.split(' ')
-    se = SearchEngine.SearchEngine()
-    searchEngines = se.listEngines()
-    strEngineUnkown = 'Zoekmachine \'%s\' ken ik niet. Beschikbare zoekmachines: %s'
+    engineUnkown = 'Zoekmachine \'%s\' ken ik niet. Beschikbare zoekmachines: %s'
     if len(args) < 2:
-        if args[0] not in searchEngines:
-            bot.msg(reply, se.useEngine('google', ' '.join(args[0:]).strip()))
+        if args[0] not in listEngines():
+            bot.msg(reply, useEngine('google', ' '.join(args[0:]).strip()))
         else:
             bot.msg(reply, 'Er is een zoekterm nodig.')
     else:
-        if args[0] not in searchEngines:
-            bot.msg(reply, strEngineUnkown % (args[0], ", ".join(searchEngines)))
+        if args[0] not in listEngines():
+            bot.msg(reply, engineUnkown % (args[0], ", ".join(listEngines())))
         else:
-            searchEnginesParsed = se.parse(args[0], ' '.join(args[1:]).strip())
+            searchEnginesParsed = parse(args[0], ' '.join(args[1:]).strip())
             if searchEnginesParsed:
                 bot.msg(reply, searchEnginesParsed)

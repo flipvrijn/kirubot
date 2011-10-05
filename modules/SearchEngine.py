@@ -19,9 +19,6 @@ class SearchEngine:
         'wikien': 'http://en.wikipedia.org/wiki/Special:Search?search=%s',
     }
 
-    def __init__(self):
-        pass
-
     def listEngines(self):
         return [k for k in sorted(self.engines.keys())]
 
