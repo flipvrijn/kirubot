@@ -1,12 +1,10 @@
-import urllib
-import re
-import os, sys
+__author__ = 'flipvanrijn'
+
+import os, sys, urllib, re
 from twisted.words.protocols import irc
 from twisted.internet import protocol, threads
 from twisted.python import log
 from twisted.python.logfile import DailyLogFile
-
-__author__ = 'flipvanrijn'
 
 class KiRuBot(irc.IRCClient):
     """ KiRuBot """
